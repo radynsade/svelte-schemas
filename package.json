@@ -1,6 +1,7 @@
 {
 	"name": "svelte-schemas",
 	"version": "1.0.0",
+	"license": "ISC",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run package",

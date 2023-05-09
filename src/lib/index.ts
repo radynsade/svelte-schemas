@@ -77,10 +77,7 @@ async function validate<StoreType, ResultType>(
 
 type Base<StoreType, ResultType> = Omit<Schema<StoreType, ResultType>, 'result' | 'validate'>;
 
-function base<StoreType, ResultType>(
-	value: StoreType,
-	rules: Rule<ResultType>[]
-): Base<StoreType, ResultType> {
+function base<StoreType, ResultType>(value: StoreType): Base<StoreType, ResultType> {
 	const store: Writable<SchemaData<StoreType>> = writable({
 		errors: [],
 		value,
@@ -139,7 +136,8 @@ export function field<ValueType>(
 	List
 */
 
-export interface List<StoreType, ResultType> extends Schema<Schema<StoreType, ResultType>[], ResultType[]> {
+export interface List<StoreType, ResultType>
+	extends Schema<Schema<StoreType, ResultType>[], ResultType[]> {
 	add(this: List<StoreType, ResultType>): void;
 	delete(this: List<StoreType, ResultType>, index: number): void;
 }
@@ -196,7 +194,10 @@ export function list<StoreType, ResultType>(
 	Struct
 */
 
-export type StructStore<StructType> = Record<keyof StructType, Schema<any, any>>;
+export type StructStore<StructType> = {
+	[Key in keyof StructType]: Schema<unknown, StructType[Key]>;
+};
+
 export type Struct<StructType> = Schema<StructStore<StructType>, StructType>;
 
 export function struct<StructType>(
@@ -215,7 +216,7 @@ export function struct<StructType>(
 			return validate(this, rules);
 		},
 		result(this: Struct<StructType>): StructType {
-			let result: Record<string, any> = {};
+			const result: Record<string, unknown> = {};
 			const currentSchemas = get(this).value;
 
 			for (const key in currentSchemas) {

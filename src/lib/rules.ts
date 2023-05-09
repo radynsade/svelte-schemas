@@ -123,7 +123,7 @@ export function oneOf(values: Array<string | number>): Rule<string | number> {
 	};
 }
 
-export function allUnique(): Rule<Array<string|number>> {
+export function allUnique(): Rule<Array<string | number>> {
 	return {
 		name: 'allUnique',
 		validate: async function (values: Array<string | number>): Promise<boolean> {

@@ -12,14 +12,15 @@
 		node.type = type;
 	};
 </script>
+
 <div>
 	<label class="field">
 		<span class="title">{title}</span>
 		<input
-			placeholder="{placeholder}"
-			maxlength="{max}"
-			autocomplete="{autocomplete}"
-			class:error="{errors.length > 0}"
+			{placeholder}
+			maxlength={max}
+			{autocomplete}
+			class:error={errors.length > 0}
 			use:ref
 			bind:value
 			on:blur

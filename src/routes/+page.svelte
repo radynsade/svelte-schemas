@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { field, list, struct, type Struct } from "$lib/index.ts";
-	import { min, max, email } from "$lib/rules.ts";
-	import TextField from "$lib/example/TextField.svelte";
-	import type { Guest } from "$lib/example/types.ts";
-	import GuestForm from "$lib/example/GuestForm.svelte";
+	import { field, list, struct, type Struct } from '$lib/index.ts';
+	import { min, max, email } from '$lib/rules.ts';
+	import TextField from '$lib/example/TextField.svelte';
+	import type { Guest } from '$lib/example/types.ts';
+	import GuestForm from '$lib/example/GuestForm.svelte';
 
 	const nameErrorMessages = {
-		min: 'Name of the event cannot be shorter than 3 characters.',
+		min: 'Name of the event cannot be shorter than 3 characters.'
 	};
 
 	const name = field('', [min(3)]);
@@ -29,16 +29,11 @@
 		lastname: ''
 	};
 
-	const guestsErrorMessages = {
+	const guestsErrorMessages: Record<string, string> = {
 		max: 'Maximum amount of guests is 10.'
 	};
 
-	const guests = list(
-		createGuest,
-		emptyPerson,
-		[],
-		[max(10)]
-	);
+	const guests = list(createGuest, emptyPerson, [], [max(10)]);
 
 	function addGuest(): void {
 		guests.add();
@@ -63,33 +58,38 @@
 		});
 	}
 </script>
+
 <h1>Event</h1>
-<form class="form" on:submit="{onSubmit}">
+<form class="form" on:submit={onSubmit}>
 	<TextField
 		title="Name"
 		placeholder="My birthday"
-		bind:value="{$name.value}"
-		errors="{$name.errors}"
-		messages="{nameErrorMessages}"
+		bind:value={$name.value}
+		errors={$name.errors}
+		messages={nameErrorMessages}
 		type="text"
 	/>
 	<TextField
 		title="Contact email"
 		placeholder="banana@example.org"
-		bind:value="{$contactEmail.value}"
-		errors="{$contactEmail.errors}"
-		messages="{emailErrorMessages}"
+		bind:value={$contactEmail.value}
+		errors={$contactEmail.errors}
+		messages={emailErrorMessages}
 		type="email"
 	/>
 	<h2>Guests</h2>
-	<button type="button" on:click="{addGuest}">Add</button>
+	{#each $guests.errors as error}
+		<div>{guestsErrorMessages[error]}</div>
+	{/each}
+	<button type="button" on:click={addGuest}>Add</button>
 	{#key rerender}
 		{#each $guests.value as guest, i}
-			<GuestForm {guest} index="{i}" deleter="{deleteGuest}" />
+			<GuestForm {guest} index={i} deleter={deleteGuest} />
 		{/each}
 	{/key}
 	<button type="submit">Send</button>
 </form>
+
 <style>
 	.form {
 		width: 400px;

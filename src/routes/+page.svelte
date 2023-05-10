@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { field, list, struct, type Struct } from '$lib/index.ts';
+	import { field, list, struct } from '$lib/index.ts';
 	import { min, max, email } from '$lib/rules.ts';
 	import TextField from '$lib/example/TextField.svelte';
 	import type { Guest } from '$lib/example/types.ts';
@@ -17,8 +17,8 @@
 
 	const contactEmail = field('', [email()]);
 
-	function createGuest(guest: Guest): Struct<Guest> {
-		return struct<Guest>({
+	function createGuest(guest: Guest) {
+		return struct({
 			firstname: field(guest.firstname, [min(2)]),
 			lastname: field(guest.lastname, [min(2)])
 		});

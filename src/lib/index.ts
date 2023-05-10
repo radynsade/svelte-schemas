@@ -122,7 +122,7 @@ export function field<ValueType>(
 	rules: Rule<ValueType>[] = []
 ): Field<ValueType> {
 	return {
-		...base(value, rules),
+		...base(value),
 		validate(this: Field<ValueType>): Promise<boolean> {
 			return validate(this, rules);
 		},
@@ -162,7 +162,7 @@ export function list<StoreType, ResultType>(
 	}
 
 	return {
-		...base(schemas, rules),
+		...base(schemas),
 		validate(this: List<StoreType, ResultType>): Promise<boolean> {
 			const currentSchemas = get(this).value;
 
@@ -194,19 +194,24 @@ export function list<StoreType, ResultType>(
 	Struct
 */
 
-export type StructStore<StructType> = {
-	[Key in keyof StructType]: Schema<unknown, StructType[Key]>;
+type StructResultType<StoreType> = {
+	[Key in keyof StoreType]: StoreType[Key] extends Schema<infer _, infer U> ? U : never;
 };
 
-export type Struct<StructType> = Schema<StructStore<StructType>, StructType>;
+type StructBaseType<StoreType> = Record<keyof StoreType, Schema<unknown, unknown>>;
 
-export function struct<StructType>(
-	schemas: StructStore<StructType>,
-	rules: Rule<StructType>[] = []
-): Struct<StructType> {
+export type Struct<StoreType extends StructBaseType<StoreType>> = Schema<
+	StoreType,
+	StructResultType<StoreType>
+>;
+
+export function struct<StoreType extends StructBaseType<StoreType>>(
+	schemas: StoreType,
+	rules: Rule<StructResultType<StoreType>>[] = []
+): Struct<StoreType> {
 	return {
-		...base(schemas, rules),
-		validate(this: Struct<StructType>): Promise<boolean> {
+		...base(schemas),
+		validate(this: Struct<StoreType>): Promise<boolean> {
 			const currentSchemas = get(this).value;
 
 			for (const key in currentSchemas) {
@@ -215,7 +220,7 @@ export function struct<StructType>(
 
 			return validate(this, rules);
 		},
-		result(this: Struct<StructType>): StructType {
+		result(this: Struct<StoreType>): StructResultType<StoreType> {
 			const result: Record<string, unknown> = {};
 			const currentSchemas = get(this).value;
 
@@ -223,7 +228,7 @@ export function struct<StructType>(
 				result[key] = currentSchemas[key].result();
 			}
 
-			return result as StructType;
+			return result as StructResultType<StoreType>;
 		}
 	};
 }

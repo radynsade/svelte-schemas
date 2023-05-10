@@ -1,9 +1,9 @@
 <script lang="ts">
 	import TextField from '$lib/example/TextField.svelte';
-	import type { Guest } from '$lib/example/types.ts';
+	import type { GuestForm } from '$lib/example/types.ts';
 	import type { Struct } from '$lib/index.ts';
 
-	export let guest: Struct<Guest>;
+	export let guest: Struct<GuestForm>;
 	export let index: number;
 	export let deleter: (i: number) => void;
 

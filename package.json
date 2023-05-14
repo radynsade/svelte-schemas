@@ -1,6 +1,6 @@
 {
 	"name": "svelte-schemas",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"license": "ISC",
 	"repository": {
 		"type": "git",
@@ -17,14 +17,18 @@
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write ."
 	},
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
-			"*": "./dist/index.js"
+			"svelte": "./dist/index.js",
+			"default": "./dist/index.js"
 		},
 		"./rules": {
 			"types": "./dist/rules.d.ts",
-			"*": "./dist/rules.js"
+			"svelte": "./dist/rules.js",
+			"default": "./dist/rules.js"
 		}
 	},
 	"files": [
@@ -53,7 +57,5 @@
 		"typescript": "^5.0.0",
 		"vite": "^4.3.0"
 	},
-	"svelte": "./dist/index.js",
-	"types": "./dist/index.d.ts",
 	"type": "module"
 }

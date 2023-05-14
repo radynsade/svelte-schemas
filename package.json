@@ -1,7 +1,11 @@
 {
 	"name": "svelte-schemas",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"license": "ISC",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/radynsade/svelte-schemas.git"
+	},
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run package",

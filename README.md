@@ -1,4 +1,5 @@
 # svelte-schemas
+[>> **Github** <<](https://github.com/radynsade/svelte-schemas)
 
 ## Introduction
 
@@ -11,7 +12,6 @@ Approach is do not distinguish between fields and form, everything is a value, c
 
 - **schema.validate()** — run validation.
 - **schema.result()** — value in the store of schema may differ from the value we want, therefore use this method to get a ready-to-use value.
-- **schema.rules** — an array of rules that will be checked on validation.
 - **$schema.value** — current value of schema, not the raw data.
 - **$schema.errors** — an array of broken rules names.
 - **$schema.valid** — if result value does not brake any rules.

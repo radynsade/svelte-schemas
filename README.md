@@ -1,5 +1,4 @@
 # svelte-schemas
-[>> **Github** <<](https://github.com/radynsade/svelte-schemas)
 
 ## Introduction
 

@@ -1,4 +1,4 @@
-import type { Field } from '$lib/index.ts';
+import type { Field } from '$lib/types.js';
 
 export interface GuestForm {
 	firstname: Field<string>;

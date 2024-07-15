@@ -13,7 +13,8 @@ Approach is do not distinguish between fields and form, everything is a value, c
 - **schema.result()** — value in the store of schema may differ from the value we want, therefore use this method to get a ready-to-use value.
 - **$schema.value** — current value of schema, not the raw data.
 - **$schema.errors** — an array of broken rules names.
-- **$schema.valid** — if result value does not brake any rules.
+- **$schema.valid** — whether a result value does not brake any rules.
+- **$schema.dirty** — whether a user has changed a value.
 
 ### Field
 
@@ -63,23 +64,11 @@ Value in the store contains an array of schemas, has 'add()' and 'delete(index)'
 	}
 
 	const emails = list(createEmailField, '', [], [min(1), max(5)]);
-
-	// If you want to add a new email field on any DOM event, wrap 'add' method
-	// into a function, otherwise you'll get an error, because method relies on
-	// 'this'.
-	function addEmail(): void {
-		emails.add();
-	}
-
-	// The same for 'delete' method.
-	function deleteEmail(index: number): void {
-		emails.delete(index);
-	}
 </script>
 
-<button on:click={addEmail}>Add email:</button>
+<button on:click={emails.add}>Add email:</button>
 {#each emails as mail, i}
-	<NestedForm {mail} index={i} onDelete={deleteEmail} />
+	<NestedForm {mail} index={i} onDelete={emails.delete} />
 {/each}
 ```
 

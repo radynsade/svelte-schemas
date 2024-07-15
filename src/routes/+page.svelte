@@ -1,56 +1,44 @@
 <script lang="ts">
-	import { field, list, struct } from '$lib/index.ts';
-	import { min, max, email } from '$lib/rules.ts';
 	import TextField from '$lib/example/TextField.svelte';
 	import type { Guest } from '$lib/example/types.ts';
 	import GuestForm from '$lib/example/GuestForm.svelte';
+	import { field, list, struct } from '$lib/index.js';
+	import { email, ip, max, min, uri } from '$lib/rules.js';
 
 	const nameErrorMessages = {
 		min: 'Name of the event cannot be shorter than 3 characters.'
 	};
 
-	const name = field('', [min(3)]);
+	const name = field([min(3)], 'aboba');
 
 	const emailErrorMessages = {
 		email: 'Invalid email format.'
 	};
 
-	const contactEmail = field('', [email()]);
+	const contactEmail = field([email()], '');
+	const website = field([uri()], '');
+	const homeIp = field([ip()], '');
 
-	function createGuest(guest: Guest) {
+	function createGuest(guest?: Guest) {
 		return struct({
-			firstname: field(guest.firstname, [min(2)]),
-			lastname: field(guest.lastname, [min(2)])
+			firstname: field([min(2)], guest ? guest.firstname : ''),
+			lastname: field([min(2)], guest ? guest.lastname : '')
 		});
 	}
-
-	const emptyPerson = {
-		firstname: '',
-		lastname: ''
-	};
 
 	const guestsErrorMessages: Record<string, string> = {
 		max: 'Maximum amount of guests is 10.'
 	};
 
-	const guests = list(createGuest, emptyPerson, [], [max(10)]);
-
-	function addGuest(): void {
-		guests.add();
-	}
-
-	let rerender = false;
-
-	function deleteGuest(index: number): void {
-		guests.delete(index);
-		rerender = !rerender;
-	}
+	const guests = list(createGuest, [max(10)]);
 
 	const form = struct({
 		name,
 		contactEmail,
 		guests
 	});
+
+	const a = $form.value.guests;
 
 	function onSubmit(): void {
 		form.validate().then(() => {
@@ -77,14 +65,28 @@
 		messages={emailErrorMessages}
 		type="email"
 	/>
+	<TextField
+		title="Website"
+		placeholder="https://example.com"
+		bind:value={$website.value}
+		errors={$website.errors}
+		type="text"
+	/>
+	<TextField
+		title="IP"
+		placeholder="127.0.0.1"
+		bind:value={$homeIp.value}
+		errors={$homeIp.errors}
+		type="text"
+	/>
 	<h2>Guests</h2>
 	{#each $guests.errors as error}
 		<div>{guestsErrorMessages[error]}</div>
 	{/each}
-	<button type="button" on:click={addGuest}>Add</button>
-	{#key rerender}
+	<button type="button" on:click={guests.add}>Add</button>
+	{#key $guests.value.length}
 		{#each $guests.value as guest, i}
-			<GuestForm {guest} index={i} deleter={deleteGuest} />
+			<GuestForm {guest} index={i} deleter={guests.delete} />
 		{/each}
 	{/key}
 	<button type="submit">Send</button>

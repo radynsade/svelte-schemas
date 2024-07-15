@@ -33,7 +33,7 @@
 	</label>
 	<ul class="errors">
 		{#each errors as error}
-			<li>{messages[error]}</li>
+			<li>{messages[error] ?? error}</li>
 		{/each}
 	</ul>
 </div>

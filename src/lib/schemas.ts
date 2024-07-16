@@ -100,7 +100,7 @@ function base<Value, Result>(value: Value): Base<Value, Result> {
 	};
 }
 
-export function field<Value>(rules: Rule<Value>[], initial: Value): Field<Value> {
+export function field<Value>(initial: Value, rules: Rule<Value>[] = []): Field<Value> {
 	const baseSchema = base(initial);
 
 	function result(): Value {
@@ -127,14 +127,22 @@ export function field<Value>(rules: Rule<Value>[], initial: Value): Field<Value>
 	};
 }
 
+/**
+ * @param builder item schema's constructor, called on new item creation.
+ * @param initial default value which will be applied to the new item after creation.
+ * @param values initial values.
+ * @param rules validation rules applied to the whole list.
+ * @returns
+ */
 export function list<Value, Result>(
-	itemConstructor: (value?: Result) => Schema<Value, Result>,
-	rules: Rule<Result[]>[] = [],
-	initial: Result[] = []
+	itemConstructor: (value: Result) => Schema<Value, Result>,
+	initial: Result,
+	values: Result[] = [],
+	rules: Rule<Result[]>[] = []
 ): List<Value, Result> {
 	let schemas: Schema<Value, Result>[] = [];
 
-	for (const value of initial) {
+	for (const value of values) {
 		schemas = [...schemas, itemConstructor(value)];
 	}
 
@@ -162,7 +170,7 @@ export function list<Value, Result>(
 	function add(): void {
 		baseSchema.update((state) => ({
 			...state,
-			value: [...state.value, itemConstructor()]
+			value: [...state.value, itemConstructor(initial)]
 		}));
 	}
 

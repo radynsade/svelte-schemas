@@ -9,20 +9,20 @@
 		min: 'Name of the event cannot be shorter than 3 characters.'
 	};
 
-	const name = field([min(3)], 'aboba');
+	const name = field('', [min(3)]);
 
 	const emailErrorMessages = {
 		email: 'Invalid email format.'
 	};
 
-	const contactEmail = field([email()], '');
-	const website = field([uri()], '');
-	const homeIp = field([ip()], '');
+	const contactEmail = field('', [email()]);
+	const website = field('', [uri()]);
+	const homeIp = field('', [ip()]);
 
-	function createGuest(guest?: Guest) {
+	function createGuest(guest: Guest) {
 		return struct({
-			firstname: field([min(2)], guest ? guest.firstname : ''),
-			lastname: field([min(2)], guest ? guest.lastname : '')
+			firstname: field(guest.firstname, [min(2)]),
+			lastname: field(guest.lastname, [min(2)]),
 		});
 	}
 
@@ -30,15 +30,13 @@
 		max: 'Maximum amount of guests is 10.'
 	};
 
-	const guests = list(createGuest, [max(10)]);
+	const guests = list(createGuest, {firstname: '', lastname: ''}, [], [max(10)]);
 
 	const form = struct({
 		name,
 		contactEmail,
 		guests
 	});
-
-	const a = $form.value.guests;
 
 	function onSubmit(): void {
 		form.validate().then(() => {
